@@ -38,7 +38,7 @@ function itsComingCloser() {
     }
 }
 
-function itsRotating() {
+function itsTwitching() {
     var halfRotateStrength = ROTATE_STRENGTH * 0.5;
     var currentRotation;
 
@@ -65,17 +65,17 @@ function playItsWaltz() {
     }
 }
 
-function initMeatballMan() {
+function rollUpAndEngorge() {
     growthInterval = setInterval(itsComingCloser, GROWTH_DELAY_MS);
-    rotateInterval = setInterval(itsRotating, ROTATE_DELAY_MS);
+    rotateInterval = setInterval(itsTwitching, ROTATE_DELAY_MS);
 
     playItsWaltz();
 }
 
-function main() {
+function letItConsume() {
     meatballMan = document.getElementById("man");
     if (meatballMan) {
-        initMeatballMan();
+        rollUpAndEngorge();
     } else {
         throw Error(
             "Something went terribly wrong... The Meatball Man doesn't exist."
@@ -83,4 +83,4 @@ function main() {
     }
 }
 
-main();
+letItConsume();
