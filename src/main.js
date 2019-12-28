@@ -1,4 +1,4 @@
-// "use strict";
+"use strict";
 
 var DEFAULT_WIDTH_UNIT = "px";
 var GROWTH = 2;
