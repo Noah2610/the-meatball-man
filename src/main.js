@@ -1,10 +1,11 @@
 // "use strict";
 
 var DEFAULT_WIDTH_UNIT = "px";
-var GROWTH = 0.5;
+var GROWTH = 2;
 var GROWTH_DELAY_MS = 100;
 var ROTATE_DELAY_MS = 100;
 var ROTATE_STRENGTH = 2;
+var MAX_GROWTH = 800;
 
 var meatballMan;
 var growthInterval;
@@ -25,7 +26,9 @@ function itsComingCloser() {
     }
 
     if ((currentWidth == 0 || currentWidth) && widthUnit) {
-        meatballMan.style.width = String(currentWidth + GROWTH) + widthUnit;
+        var newWidth = currentWidth + GROWTH;
+        newWidth = newWidth < MAX_GROWTH ? newWidth : MAX_GROWTH;
+        meatballMan.style.width = String(newWidth) + widthUnit;
     }
 }
 
