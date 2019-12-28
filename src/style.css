@@ -9,7 +9,6 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background-color: #000000;
     margin: 0;
     padding: 0;
 }
@@ -37,4 +36,16 @@
     width: auto;
     height: auto;
     margin: auto;
+}
+
+#error {
+    position: absolute;
+    width: 100%;
+    top: 45%;
+    margin: auto;
+    text-align: center;
+}
+
+#error > p {
+    padding: 0 460px;
 }

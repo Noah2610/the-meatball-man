@@ -5,13 +5,20 @@ var GROWTH = 2;
 var GROWTH_DELAY_MS = 100;
 var ROTATE_DELAY_MS = 100;
 var ROTATE_STRENGTH = 2;
-var MAX_GROWTH = 800;
+var MAX_GROWTH = 1000;
 var WALTZ_PATH = "./public/waltz.mp3";
 
 var meatballMan;
 var growthInterval;
 var rotateInterval;
 var itsWaltz;
+
+function addError(msg) {
+    var errorEl = document.getElementById("error");
+    if (errorEl && msg) {
+        errorEl.innerHTML += "<p>" + String(msg) + "</p>";
+    }
+}
 
 function itsComingCloser() {
     var currentWidth;
@@ -72,15 +79,16 @@ function rollUpAndEngorge() {
     playItsWaltz();
 }
 
+function meatError() {
+    addError(
+        "Something went terribly wrong... The Meatball Man doesn't exist."
+    );
+}
+
 function letItConsume() {
     meatballMan = document.getElementById("man");
-    if (meatballMan) {
-        rollUpAndEngorge();
-    } else {
-        throw Error(
-            "Something went terribly wrong... The Meatball Man doesn't exist."
-        );
-    }
+    meatballMan.onload = rollUpAndEngorge;
+    meatballMan.onerror = meatError;
 }
 
 letItConsume();
