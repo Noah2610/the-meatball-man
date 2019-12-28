@@ -32,10 +32,8 @@ function itsComingCloser() {
         newWidth = newWidth < MAX_GROWTH ? newWidth : MAX_GROWTH;
         meatballMan.style.width = String(newWidth) + widthUnit;
 
-        // Adjust its waltz...
         if (itsWaltz) {
             itsWaltz.volume = newWidth / MAX_GROWTH;
-            console.log(itsWaltz.volume)
         }
     }
 }
@@ -64,8 +62,6 @@ function playItsWaltz() {
     if (itsWaltz) {
         itsWaltz.loop = true;
         itsWaltz.play();
-    } else {
-        console.log("WALTZ NOT READY");
     }
 }
 
