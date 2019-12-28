@@ -1,9 +1,9 @@
 // "use strict";
 
-var GROWTH = 2;
 var DEFAULT_WIDTH_UNIT = "px";
-var GROWTH_DELAY_MS = 50;
-var ROTATE_DELAY_MS = 50;
+var GROWTH = 0.5;
+var GROWTH_DELAY_MS = 100;
+var ROTATE_DELAY_MS = 100;
 var ROTATE_STRENGTH = 2;
 
 var meatballMan;
@@ -14,7 +14,7 @@ function itsComingCloser() {
     var currentWidth;
     var widthUnit;
 
-    var widthMatch = meatballMan.style.width.match(/^(\d+)(.+)$/);
+    var widthMatch = meatballMan.style.width.match(/^([\d\.]+)(.+)$/);
 
     if (widthMatch && widthMatch[1] && widthMatch[2]) {
         currentWidth = Number(widthMatch[1]);
@@ -33,7 +33,7 @@ function itsRotating() {
     var halfRotateStrength = ROTATE_STRENGTH * 0.5;
     var currentRotation;
 
-    var rotationMatch = meatballMan.style.transform.match(/^rotate\((\d+)deg\)$/);
+    var rotationMatch = meatballMan.style.transform.match(/^rotate\(([\d\.]+)deg\)$/);
 
     if (rotationMatch && rotationMatch[1]) {
         currentRotation = Number(rotationMatch[1]);
