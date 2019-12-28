@@ -7,10 +7,12 @@ var ROTATE_DELAY_MS = 100;
 var ROTATE_STRENGTH = 2;
 var MAX_GROWTH = 1000;
 var WALTZ_PATH = "./public/waltz.mp3";
+var MAX_LOAD_TIME_MS = 10000;
 
 var meatballMan;
 var growthInterval;
 var rotateInterval;
+var loadTimeout;
 var itsWaltz;
 var meatsLoaded = {
     man: false,
@@ -19,6 +21,9 @@ var meatsLoaded = {
 };
 
 function letItConsume() {
+    loadTimeout = setTimeout(function () {
+        addError("The Meatball Man's meats have taken too long to load...");
+    }, MAX_LOAD_TIME_MS);
     meatballMan = document.getElementById("man");
     initWaltz();
     addCallbacksToImgs();
@@ -46,6 +51,7 @@ function addLoaded(type) {
         );
 
         if (allLoaded) {
+            clearTimeout(loadTimeout);
             rollUpAndEngorge();
         }
     }
@@ -132,7 +138,7 @@ function addCallbacksToImgs() {
 function addError(msg) {
     if (msg) {
         console.error(msg);
-        var errorEl = document.getElementById("error");
+        var errorEl = document.getElementById("error-wrapper");
         if (errorEl) {
             errorEl.innerHTML += "<p>" + String(msg) + "</p>";
         }
