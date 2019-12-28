@@ -38,14 +38,14 @@
     margin: auto;
 }
 
-#error {
+#error-wrapper {
     position: absolute;
     width: 100%;
-    top: 45%;
-    margin: auto;
+    height: 100%;
     text-align: center;
 }
 
-#error > p {
-    padding: 0 460px;
+.error {
+    padding: 16px 320px;
+    position: relative;
 }

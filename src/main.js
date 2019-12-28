@@ -33,14 +33,14 @@ function initWaltz() {
     itsWaltz = new Audio(WALTZ_PATH);
     itsWaltz.loop = true;
     itsWaltz.oncanplay = function () {
-        addLoaded("waltz");
+        meatLoaded("waltz");
     };
     itsWaltz.onerror = function () {
-        addError("Something went terrily wrong... The Meatball Man's Waltz doesn't exist.");
+        addError("Something went terribly wrong... The Meatball Man's Waltz doesn't exist.");
     };
 }
 
-function addLoaded(type) {
+function meatLoaded(type) {
     if (meatsLoaded.hasOwnProperty(type)) {
         meatsLoaded[type] = true;
 
@@ -51,10 +51,15 @@ function addLoaded(type) {
         );
 
         if (allLoaded) {
-            clearTimeout(loadTimeout);
-            rollUpAndEngorge();
+            allMeatsLoaded();
         }
     }
+}
+
+function allMeatsLoaded() {
+    clearTimeout(loadTimeout);
+    clearErrors();
+    rollUpAndEngorge();
 }
 
 function rollUpAndEngorge() {
@@ -112,7 +117,7 @@ function addCallbacksToImgs() {
     for (var i = 0; i < imgs.length; i++) {
         var img = imgs[i];
         img.onload = (function () {
-            addLoaded(this.id);
+            meatLoaded(this.id);
         }).bind(img);
         switch (img.id) {
             case "man":
@@ -140,8 +145,17 @@ function addError(msg) {
         console.error(msg);
         var errorEl = document.getElementById("error-wrapper");
         if (errorEl) {
-            errorEl.innerHTML += "<p>" + String(msg) + "</p>";
+            errorEl.innerHTML += "<p class=\"error\">"
+                + String(msg)
+                + "</p>";
         }
+    }
+}
+
+function clearErrors() {
+    var errorEl = document.getElementById("error-wrapper");
+    if (errorEl) {
+        errorEl.innerHTML = "";
     }
 }
 
