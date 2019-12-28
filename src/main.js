@@ -6,10 +6,12 @@ var GROWTH_DELAY_MS = 100;
 var ROTATE_DELAY_MS = 100;
 var ROTATE_STRENGTH = 2;
 var MAX_GROWTH = 800;
+var WALTZ_PATH = "./public/waltz.mp3";
 
 var meatballMan;
 var growthInterval;
 var rotateInterval;
+var itsWaltz;
 
 function itsComingCloser() {
     var currentWidth;
@@ -29,6 +31,12 @@ function itsComingCloser() {
         var newWidth = currentWidth + GROWTH;
         newWidth = newWidth < MAX_GROWTH ? newWidth : MAX_GROWTH;
         meatballMan.style.width = String(newWidth) + widthUnit;
+
+        // Adjust its waltz...
+        if (itsWaltz) {
+            itsWaltz.volume = newWidth / MAX_GROWTH;
+            console.log(itsWaltz.volume)
+        }
     }
 }
 
@@ -51,12 +59,32 @@ function itsRotating() {
         + "deg)";
 }
 
-function main() {
-    meatballMan = document.getElementById("man");
-    if (meatballMan) {
-        growthInterval = setInterval(itsComingCloser, GROWTH_DELAY_MS);
-        rotateInterval = setInterval(itsRotating, ROTATE_DELAY_MS);
+function playItsWaltz() {
+    itsWaltz = new Audio(WALTZ_PATH);
+    if (itsWaltz) {
+        itsWaltz.loop = true;
+        itsWaltz.play();
+    } else {
+        console.log("WALTZ NOT READY");
     }
 }
 
-main()
+function initMeatballMan() {
+    growthInterval = setInterval(itsComingCloser, GROWTH_DELAY_MS);
+    rotateInterval = setInterval(itsRotating, ROTATE_DELAY_MS);
+
+    playItsWaltz();
+}
+
+function main() {
+    meatballMan = document.getElementById("man");
+    if (meatballMan) {
+        initMeatballMan();
+    } else {
+        throw Error(
+            "Something went terribly wrong... The Meatball Man doesn't exist."
+        );
+    }
+}
+
+main();
