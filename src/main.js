@@ -12,17 +12,49 @@ var meatballMan;
 var growthInterval;
 var rotateInterval;
 var itsWaltz;
+var meatsLoaded = {
+    man: false,
+    bg: false,
+    waltz: false,
+};
 
 function letItConsume() {
     meatballMan = document.getElementById("man");
-    meatballMan.onload = rollUpAndEngorge;
-    meatballMan.onerror = meatError;
+    initWaltz();
+    addCallbacksToImgs();
+}
+
+function initWaltz() {
+    itsWaltz = new Audio(WALTZ_PATH);
+    itsWaltz.loop = true;
+    itsWaltz.oncanplay = function () {
+        addLoaded("waltz");
+    };
+    itsWaltz.onerror = function () {
+        addError("Something went terrily wrong... The Meatball Man's Waltz doesn't exist.");
+    };
+}
+
+function addLoaded(type) {
+    if (meatsLoaded.hasOwnProperty(type)) {
+        meatsLoaded[type] = true;
+
+        var allLoaded = Object.keys(meatsLoaded).every(
+            function (key) {
+                return meatsLoaded[key];
+            }
+        );
+
+        if (allLoaded) {
+            rollUpAndEngorge();
+        }
+    }
 }
 
 function rollUpAndEngorge() {
     growthInterval = setInterval(itsComingCloser, GROWTH_DELAY_MS);
     rotateInterval = setInterval(itsTwitching, ROTATE_DELAY_MS);
-    playItsWaltz();
+    itsWaltz.play();
 }
 
 function itsComingCloser() {
@@ -69,24 +101,41 @@ function itsTwitching() {
         + "deg)";
 }
 
-function playItsWaltz() {
-    itsWaltz = new Audio(WALTZ_PATH);
-    if (itsWaltz) {
-        itsWaltz.loop = true;
-        itsWaltz.play();
+function addCallbacksToImgs() {
+    var imgs = document.getElementsByTagName("img");
+    for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        img.onload = (function () {
+            addLoaded(this.id);
+        }).bind(img);
+        switch (img.id) {
+            case "man":
+                img.onerror = function () {
+                    addError("Something went terribly wrong... The Meatball Man doesn't exist.");
+                };
+                break;
+            case "bg":
+                img.onerror = function () {
+                    addError("The Meatball Man's glorious corridor could not be loaded. It will not be pleased...");
+                };
+                break;
+            default:
+                img.onerror = (function () {
+                    addError("Couldn't load image at '"
+                        + this.src
+                        + "'. The Meatball Man will not be pleased...");
+                }).bind(img);
+        }
     }
 }
 
-function meatError() {
-    addError(
-        "Something went terribly wrong... The Meatball Man doesn't exist."
-    );
-}
-
 function addError(msg) {
-    var errorEl = document.getElementById("error");
-    if (errorEl && msg) {
-        errorEl.innerHTML += "<p>" + String(msg) + "</p>";
+    if (msg) {
+        console.error(msg);
+        var errorEl = document.getElementById("error");
+        if (errorEl) {
+            errorEl.innerHTML += "<p>" + String(msg) + "</p>";
+        }
     }
 }
 
