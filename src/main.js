@@ -23,4 +23,4 @@ function printError(errMsg) {
     }
 }
 
-letItConsume();
+window.onload = letItConsume;
