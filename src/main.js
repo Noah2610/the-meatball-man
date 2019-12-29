@@ -5,9 +5,8 @@ var GROWTH = 2;
 var GROWTH_DELAY_MS = 100;
 var ROTATE_DELAY_MS = 100;
 var ROTATE_STRENGTH = 2;
-var MAX_GROWTH = 1000;
+var MAX_GROWTH = 1280;
 var WALTZ_PATH = "./public/waltz.mp3";
-var MAX_LOAD_TIME_MS = 10000;
 var LITTLE_RUNMO_URL = "https://www.youtube.com/watch?v=ErQHVUQ6QCk";
 
 var meatballMan;
