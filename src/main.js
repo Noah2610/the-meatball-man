@@ -10,8 +10,8 @@ var WALTZ_PATH = "./public/waltz.mp3";
 var LITTLE_RUNMO_URL = "https://www.youtube.com/watch?v=ErQHVUQ6QCk";
 
 var meatballMan;
+var waltz;
 var intervals = [];
-var itsWaltz;
 
 function letItConsume() {
     initMeatballMan();
@@ -21,30 +21,38 @@ function letItConsume() {
 
 function initMeatballMan() {
     meatballMan = document.getElementById("man");
-    meatballMan.onclick = function () {
-        stopHim();
-        setItsWidth(MAX_GROWTH);
-        window.open(LITTLE_RUNMO_URL, "_blank");
-    };
+    if (meatballMan) {
+        meatballMan.onclick = function () {
+            stopHim();
+            setItsWidth(MAX_GROWTH);
+            window.open(LITTLE_RUNMO_URL, "_blank");
+        };
+    } else {
+        printError("The Meatball Man does not exist. (img element not found)");
+    }
 }
 
 function initWaltz() {
-    itsWaltz = new Audio(WALTZ_PATH);
-    itsWaltz.loop = true;
+    waltz = document.getElementById("waltz");
+    if (waltz) {
+        waltz.volume = 0.0;
+    } else {
+        printError("The Meatball Man's Waltz does not exist. (audio element not found)");
+    }
 }
 
 function rollUpAndEngorge() {
     intervals.push(setInterval(itsComingCloser, GROWTH_DELAY_MS));
     intervals.push(setInterval(itsTwitching, ROTATE_DELAY_MS));
-    itsWaltz.play();
+    waltz.play();
 }
 
 function stopHim() {
     intervals.forEach(function (interval) {
         clearInterval(interval);
     });
-    if (itsWaltz) {
-        itsWaltz.pause();
+    if (waltz) {
+        waltz.pause();
     }
 }
 
@@ -72,8 +80,8 @@ function itsComingCloser() {
 function setItsWidth(width, unit) {
     if (width) {
         meatballMan.style.width = String(width) + (unit || DEFAULT_WIDTH_UNIT);
-        if (itsWaltz) {
-            itsWaltz.volume = width / MAX_GROWTH;
+        if (waltz) {
+            waltz.volume = width / MAX_GROWTH;
         }
     }
 }
@@ -95,6 +103,12 @@ function itsTwitching() {
     meatballMan.style.transform = "rotate("
         + String(currentRotation + ROTATE_STRENGTH * rotMult)
         + "deg)";
+}
+
+function printError(errMsg) {
+    if (errMsg) {
+        console.error("Something went terribly wrong... " + errMsg);
+    }
 }
 
 letItConsume();
