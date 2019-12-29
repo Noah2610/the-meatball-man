@@ -102,10 +102,15 @@ function itsComingCloser() {
     if ((currentWidth == 0 || currentWidth) && widthUnit) {
         var newWidth = currentWidth + GROWTH;
         newWidth = newWidth < MAX_GROWTH ? newWidth : MAX_GROWTH;
-        meatballMan.style.width = String(newWidth) + widthUnit;
+        setItsWidth(newWidth, widthUnit);
+    }
+}
 
+function setItsWidth(width, unit) {
+    if (width) {
+        meatballMan.style.width = String(width) + (unit || DEFAULT_WIDTH_UNIT);
         if (itsWaltz) {
-            itsWaltz.volume = newWidth / MAX_GROWTH;
+            itsWaltz.volume = width / MAX_GROWTH;
         }
     }
 }
