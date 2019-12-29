@@ -83,9 +83,23 @@ function setItsWidth(width) {
 }
 
 function playWaltz() {
+    var tryPlayWaltzDelayMs = 100;
+
     checkContext();
     if (context.waltz) {
-        context.waltz.play();
+        var maybePromise = context.waltz.play();
+        if (maybePromise.catch) {
+            maybePromise.catch(function () {
+                console.error(
+                    "Couldn't play the Meatball Man's Waltz, trying again in "
+                    + tryPlayWaltzDelayMs
+                    + "ms"
+                );
+            });
+        }
+        if (context.waltz.paused) {
+            setTimeout(playWaltz, tryPlayWaltzDelayMs);
+        }
     }
 }
 
