@@ -1,28 +1,26 @@
 "use strict";
 
-var DEFAULT_WIDTH_UNIT = "px";
-var GROWTH = 2;
-var GROWTH_DELAY_MS = 100;
-var ROTATE_DELAY_MS = 100;
-var ROTATE_STRENGTH = 2;
-var MAX_GROWTH = 1280;
-var WALTZ_PATH = "./public/waltz.mp3";
-var LITTLE_RUNMO_URL = "https://www.youtube.com/watch?v=ErQHVUQ6QCk";
+var context = null;
 
-var meatballMan;
-var waltz;
-var intervals = [];
+function checkContext() {
+    if (!context) {
+        throw new Error("No context");
+    }
+}
 
 function letItConsume() {
+    context = getContext();
     initMeatballMan();
     initWaltz();
-    rollUpAndEngorge();
+    if (context.meatballMan && context.waltz) {
+        rollUpAndEngorge();
+    }
 }
 
 function initMeatballMan() {
-    meatballMan = document.getElementById("man");
-    if (meatballMan) {
-        meatballMan.onclick = function () {
+    checkContext();
+    if (context.meatballMan) {
+        context.meatballMan.onclick = function () {
             stopHim();
             setItsWidth(MAX_GROWTH);
             window.open(LITTLE_RUNMO_URL, "_blank");
@@ -33,75 +31,92 @@ function initMeatballMan() {
 }
 
 function initWaltz() {
-    waltz = document.getElementById("waltz");
-    if (waltz) {
-        waltz.volume = 0.0;
+    checkContext();
+    if (context.waltz) {
+        context.waltz.volume = 0.0;
     } else {
         printError("The Meatball Man's Waltz does not exist. (audio element not found)");
     }
 }
 
 function rollUpAndEngorge() {
-    intervals.push(setInterval(itsComingCloser, GROWTH_DELAY_MS));
-    intervals.push(setInterval(itsTwitching, ROTATE_DELAY_MS));
-    waltz.play();
+    checkContext();
+    context.intervals.push(
+        setInterval(
+            itsComingCloser,
+            context.settings.growthDelayMs
+        )
+    );
+    context.intervals.push(
+        setInterval(
+            itsTwitching,
+            context.settings.rotateDelayMs
+        )
+    );
+    playWaltz();
+}
+
+function playWaltz() {
+    checkContext();
+    if (context.waltz) {
+        context.waltz.play();
+    }
 }
 
 function stopHim() {
-    intervals.forEach(function (interval) {
+    checkContext();
+
+    context.intervals.forEach(function (interval) {
         clearInterval(interval);
     });
-    if (waltz) {
-        waltz.pause();
+    context.intervals = [];
+    if (context.waltz) {
+        context.waltz.pause();
     }
 }
 
 function itsComingCloser() {
-    var currentWidth;
-    var widthUnit;
-
-    var widthMatch = meatballMan.style.width.match(/^([\d\.]+)(.+)$/);
-
-    if (widthMatch && widthMatch[1] && widthMatch[2]) {
+    checkContext();
+    var currentWidth = 0;
+    var widthMatch = context
+        .meatballMan.style.width
+        .match(/^([\d\.]+).+$/);
+    if (widthMatch && widthMatch[1]) {
         currentWidth = Number(widthMatch[1]);
-        widthUnit = widthMatch[2];
-    } else {
-        currentWidth = 0;
-        widthUnit = DEFAULT_WIDTH_UNIT;
     }
-
-    if ((currentWidth == 0 || currentWidth) && widthUnit) {
-        var newWidth = currentWidth + GROWTH;
-        newWidth = newWidth < MAX_GROWTH ? newWidth : MAX_GROWTH;
-        setItsWidth(newWidth, widthUnit);
+    if (currentWidth == 0 || currentWidth) {
+        setItsWidth(currentWidth + context.settings.growthStrength);
     }
 }
 
-function setItsWidth(width, unit) {
-    if (width) {
-        meatballMan.style.width = String(width) + (unit || DEFAULT_WIDTH_UNIT);
-        if (waltz) {
-            waltz.volume = width / MAX_GROWTH;
+function setItsWidth(width) {
+    checkContext();
+    if (width && context.meatballMan) {
+        var newWidth = width < context.settings.maxGrowth
+            ? width
+            : context.settings.maxGrowth;
+        context.meatballMan.style.width = String(newWidth) + context.settings.widthUnit;
+        if (context.waltz) {
+            context.waltz.volume = newWidth / context.settings.maxGrowth;
         }
     }
 }
 
 function itsTwitching() {
-    var halfRotateStrength = ROTATE_STRENGTH * 0.5;
-    var currentRotation;
-
-    var rotationMatch = meatballMan.style.transform.match(/^rotate\(([\d\.]+)deg\)$/);
-
+    checkContext();
+    var halfRotateStrength = context.settings.rotateStrength * 0.5;
+    var currentRotation = 0;
+    var rotationMatch = context
+        .meatballMan.style.transform
+        .match(/^rotate\(([\d\.]+)deg\)$/);
     if (rotationMatch && rotationMatch[1]) {
         currentRotation = Number(rotationMatch[1]);
-    } else {
-        currentRotation = 0;
     }
 
-    var rotRand = Math.random() * ROTATE_STRENGTH - currentRotation;
+    var rotRand = Math.random() * context.settings.rotateStrength - currentRotation;
     var rotMult = rotRand >= halfRotateStrength ? 1.0 : -1.0;
-    meatballMan.style.transform = "rotate("
-        + String(currentRotation + ROTATE_STRENGTH * rotMult)
+    context.meatballMan.style.transform = "rotate("
+        + String(currentRotation + context.settings.rotateStrength * rotMult)
         + "deg)";
 }
 
