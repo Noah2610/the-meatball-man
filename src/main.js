@@ -8,10 +8,10 @@ var ROTATE_STRENGTH = 2;
 var MAX_GROWTH = 1000;
 var WALTZ_PATH = "./public/waltz.mp3";
 var MAX_LOAD_TIME_MS = 10000;
+var LITTLE_RUNMO_URL = "https://www.youtube.com/watch?v=ErQHVUQ6QCk";
 
 var meatballMan;
-var growthInterval;
-var rotateInterval;
+var intervals = [];
 var loadTimeout;
 var itsWaltz;
 var meatsLoaded = {
@@ -24,9 +24,17 @@ function letItConsume() {
     loadTimeout = setTimeout(function () {
         addError("The Meatball Man's meats have taken too long to load...");
     }, MAX_LOAD_TIME_MS);
-    meatballMan = document.getElementById("man");
+    initMeatballMan();
     initWaltz();
     addCallbacksToImgs();
+}
+
+function initMeatballMan() {
+    meatballMan = document.getElementById("man");
+    meatballMan.onclick = function () {
+        stopHim();
+        window.open(LITTLE_RUNMO_URL, "_blank");
+    };
 }
 
 function initWaltz() {
@@ -63,9 +71,18 @@ function allMeatsLoaded() {
 }
 
 function rollUpAndEngorge() {
-    growthInterval = setInterval(itsComingCloser, GROWTH_DELAY_MS);
-    rotateInterval = setInterval(itsTwitching, ROTATE_DELAY_MS);
+    intervals.push(setInterval(itsComingCloser, GROWTH_DELAY_MS));
+    intervals.push(setInterval(itsTwitching, ROTATE_DELAY_MS));
     itsWaltz.play();
+}
+
+function stopHim() {
+    intervals.forEach(function (interval) {
+        clearInterval(interval);
+    });
+    if (itsWaltz) {
+        itsWaltz.pause();
+    }
 }
 
 function itsComingCloser() {

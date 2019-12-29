@@ -25,11 +25,14 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    z-index: 1;
 }
 
 /* The Meatball Man's dimensions: */
 /* 860 x 860 */
-#man { }
+#man {
+    cursor: pointer;
+}
 
 #error-wrapper {
     position: absolute;
