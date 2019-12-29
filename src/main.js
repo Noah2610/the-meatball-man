@@ -33,6 +33,7 @@ function initMeatballMan() {
     meatballMan = document.getElementById("man");
     meatballMan.onclick = function () {
         stopHim();
+        setItsWidth(MAX_GROWTH);
         window.open(LITTLE_RUNMO_URL, "_blank");
     };
 }
