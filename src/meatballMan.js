@@ -3,8 +3,8 @@ function initMeatballMan() {
     if (context.meatballMan) {
         context.meatballMan.onclick = function () {
             stopHim();
-            setItsWidth(MAX_GROWTH);
-            window.open(LITTLE_RUNMO_URL, "_blank");
+            setItsWidth(context.settings.maxGrowth);
+            window.open(context.settings.littleRunmoUrl, "_blank");
         };
     } else {
         printError("The Meatball Man does not exist. (img element not found)");
